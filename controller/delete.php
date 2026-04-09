@@ -9,5 +9,5 @@ if ($id) {
     deletar($pdo, $id);
 }
 
-header("Location: ../index.php");
+header("Location: ../view/cadastrarNoBanco.php");
 exit;

@@ -11,11 +11,9 @@ if (session_status() === PHP_SESSION_NONE) {
 $erro = $_SESSION["erro"] ?? null;
 unset($_SESSION["erro"]);
 
-$nome_salvo = $_SESSION['old_nome'] ?? "";
-$email_salvo = $_SESSION['old_email'] ?? "";
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,7 +25,6 @@ $email_salvo = $_SESSION['old_email'] ?? "";
         <?php
             $nome_salvo = $_SESSION['old_nome'] ?? "";
             $email_salvo = $_SESSION['old_email'] ?? "";
-            $senha_salva = $_SESSION['old_senha'] ?? "";
         ?>
 
         <header>
