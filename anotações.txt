@@ -1,0 +1,68 @@
+Para fazer isso do começo ao fim, o fluxo é: JavaScript (Fetch) → PHP (PDO + SQL) → JSON (Resposta) → JavaScript (DOM) para montar a tabela.Aqui está o passo a passo completo:1. O HTML (Onde a tabela vai aparecer)Crie um lugar para os dados serem inseridos.html<button onclick="carregarUsuarios()">Atualizar Tabela</button>
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Email</th>
+        </tr>
+    </thead>
+    <tbody id="corpo-tabela">
+        <!-- O JavaScript vai preencher aqui -->
+    </tbody>
+</table>
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+2. O PHP (buscar_usuarios.php)Este arquivo busca os dados e os entrega no formato JSON, que é o padrão que o JavaScript entende.php<?php
+
+require "conexao.php"; // Onde está o seu $pdo
+
+// 1. Faz a busca
+$stmt = $pdo->prepare("SELECT id, email FROM usuarios");
+$stmt->execute();
+$usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// 2. Importante: Avisar o navegador que o retorno é JSON
+header('Content-Type: application/json');
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// 3. Imprime os dados codificados
+echo json_encode($usuarios);
+exit;
+Use o código com cuidado.3. O JavaScript (script.js)Aqui você busca os dados e usa um loop para criar as linhas (tr) e colunas (td).javascriptasync function carregarUsuarios() {
+    try {
+        // 1. Faz a requisição (GET por padrão)
+        const resposta = await fetch('buscar_usuarios.php');
+        
+        // 2. Converte a resposta para um objeto/array JS
+        const usuarios = await resposta.json();
+
+        // 3. Seleciona o corpo da tabela no HTML
+        const tbody = document.getElementById('corpo-tabela');
+        
+        // 4. Limpa a tabela antes de preencher (para não duplicar)
+        tbody.innerHTML = "";
+
+        // 5. Percorre os usuários e cria as linhas
+        usuarios.forEach(usuario => {
+            const linha = `
+                <tr>
+                    <td>${usuario.id}</td>
+                    <td>${usuario.email}</td>
+                </tr>
+            `;
+            tbody.innerHTML += linha;
+        });
+
+    } catch (erro) {
+        console.error('Erro ao buscar usuários:', erro);
+    }
+}
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+O que aconteceu aqui?O PHP gerou algo como: [{"id":1, "email":"joao@exemplo.com"}, {...}].O fetch pegou esse texto.O .json() transformou o texto em um Array de objetos.O forEach "navegou" por cada objeto e injetou o HTML direto no seu tbody.Você prefere que eu te mostre como adicionar um filtro de busca nessa tabela (ex: buscar por um email específico)?
